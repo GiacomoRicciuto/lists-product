@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { StateContext } from "./App";
+import { StateContext } from "../App";
 import Product from "./product";
-import { inputNameProduct } from "./State";
+import { inputNameProduct } from "../State";
 import InputProduct from "./inputProduct";
 
 interface productProps {

@@ -9,8 +9,8 @@ import {
     setQuantityUndefined,
     showAlertNameProduct,
     showAlertRemoveProduct,
-} from "./State";
-import { StateContext } from "./App";
+} from "../State";
+import { StateContext } from "../App";
 import Alert from "./Alert";
 
 interface inputProductProps {

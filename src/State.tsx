@@ -9,6 +9,12 @@ export interface listsProps {
     products: productsProps[]
 }
 
+export interface menuItem {
+    name: string,
+    code: string,
+    link: string
+}
+
 export interface State {
     lists: listsProps[],
     groups: string[],
@@ -18,7 +24,10 @@ export interface State {
     creatingProduct: boolean,
     removeConfirmation: boolean,
     alertNameProduct: boolean,
-    alertRemoveProduct: boolean
+    alertRemoveProduct: boolean,
+    expandedMenu: boolean,
+    menu: menuItem[]
+    selectedMenuItem: menuItem
 }
 
 export const initialState: State = {
@@ -28,7 +37,13 @@ export const initialState: State = {
     creatingProduct: false,
     removeConfirmation: false,
     alertNameProduct: false,
-    alertRemoveProduct: false
+    alertRemoveProduct: false,
+    expandedMenu: false,
+    menu: [
+        { name: "Liste", code: "lists", link: "/lists" },
+        { name: "Gruppi", code: "groups", link: "/groups" }
+    ],
+    selectedMenuItem: { name: "Liste", code: "lists", link: "/lists" }
 }
 
 export type Action =
@@ -55,6 +70,8 @@ export type Action =
     | {type: "addGroup", groupName: string}
     | {type: "changeGroupOrder", orderedList: string[]}
     | {type: "selectGroup", productName: string, nameGroup: string}
+    | {type: "expandMenu"}
+    | {type: "selectMenuItem", menuItem: menuItem}
 
 export const inputNameList = (): Action => ({type: "inputNameList"})
 export const outputNameList = (): Action => ({type: "outputNameList"})
@@ -79,6 +96,8 @@ export const addProduct = (productName: string): Action => ({type: "addProduct",
 export const addGroup = (groupName: string): Action => ({type: "addGroup", groupName})
 export const changeGroupOrder = (orderedList: string[]): Action => ({type: "changeGroupOrder", orderedList})
 export const selectGroup = (productName: string, nameGroup: string): Action => ({type: "selectGroup", productName, nameGroup})
+export const expandMenu = (): Action => ({type: "expandMenu"})
+export const selectMenuItem = (menuItem: menuItem): Action => ({type: "selectMenuItem", menuItem})
 
 export function reducer(state: State, action: Action): State {
     switch (action.type) {
@@ -298,5 +317,15 @@ export function reducer(state: State, action: Action): State {
                     return list;
                 }),
             };
+        case "expandMenu":
+            return {
+                ...state,
+                expandedMenu: !state.expandedMenu
+            }
+        case "selectMenuItem":
+            return {
+                ...state,
+                selectedMenuItem: action.menuItem
+            }
     }
 }

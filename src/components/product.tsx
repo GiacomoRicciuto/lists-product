@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
-import {StateContext} from "./App";
-import {inputNameProduct, selectProduct} from "./State";
+import {StateContext} from "../App";
+import {inputNameProduct, selectProduct} from "../State";
 
 interface ProductProps {
     listName: string,

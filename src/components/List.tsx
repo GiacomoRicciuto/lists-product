@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { StateContext } from "./App";
+import { StateContext } from "../App";
 import Products from "./products";
 import {
     askConfirmation,
@@ -8,7 +8,7 @@ import {
     selectList,
     addGroup,
     changeGroupOrder
-} from "./State";
+} from "../State";
 
 interface ListProps {
     listName: string;
