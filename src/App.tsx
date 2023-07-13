@@ -2,6 +2,7 @@ import React, {createContext, useReducer} from 'react';
 import './App.css';
 import {State, Action, initialState, reducer} from "./State";
 import Lists from "./Lists";
+import Groups from "./groups";
 
 type AppContext = {
     state: State,
@@ -21,6 +22,7 @@ function App() {
         <StateContext.Provider value={{state,dispatch}}>
             <h1>Gestore liste</h1>
             <Lists/>
+            <Groups/>
         </StateContext.Provider>
     );
 }

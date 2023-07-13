@@ -5,13 +5,14 @@ import {
     modifyProductName,
     modifyQuantity,
     outputNameProduct,
-    removeProduct,
+    removeProduct, selectGroup,
     setQuantityUndefined,
     showAlertNameProduct,
-    showAlertRemoveProduct,
+    showAlertRemoveProduct, unSelectGroup,
 } from "./State";
 import { StateContext } from "./App";
 import Alert from "./Alert";
+import Select from "react-select";
 
 interface inputProductProps {
     listName: string;
@@ -29,10 +30,9 @@ function InputProduct({ listName, productName }: inputProductProps): ReactElemen
     const [counter, setCounter] = useState(selectedProductObj?.quantity || 0);
 
     const [isChecked, setIsChecked] = useState(selectedProductObj?.quantity !== undefined);
-
     const [selectedGroup, setSelectedGroup] = useState<string | undefined>(selectedProductObj?.group);
 
-    const handleGroupSelect = (selectedOption: any) => {
+    const handleGroupSelect = (selectedOption: { value: string; label: string } | null) => {
         setSelectedGroup(selectedOption?.value);
     };
 
@@ -45,8 +45,18 @@ function InputProduct({ listName, productName }: inputProductProps): ReactElemen
             dispatch(addProduct(newProductName));
             if (isChecked) {
                 dispatch(modifyQuantity(listName, newProductName, counter));
+            } else {
+                dispatch(setQuantityUndefined(listName, newProductName));
+            }
+            if (selectedGroup !== undefined) {
+                dispatch(selectGroup(newProductName, selectedGroup))
+            }
+            else {
+                dispatch(unSelectGroup(newProductName))
             }
             setNewProductName("");
+            setSelectedGroup(undefined); // Reset selected group
+
         } else {
             dispatch(showAlertNameProduct());
         }
@@ -60,7 +70,14 @@ function InputProduct({ listName, productName }: inputProductProps): ReactElemen
             } else {
                 dispatch(setQuantityUndefined(listName, newProductName));
             }
+            if (selectedGroup !== undefined) {
+                dispatch(selectGroup(newProductName, selectedGroup))
+            }
+            else {
+                dispatch(unSelectGroup(newProductName))
+            }
             setNewProductName("");
+            setSelectedGroup(undefined); // Reset selected group
         } else {
             dispatch(showAlertNameProduct());
         }
@@ -121,20 +138,14 @@ function InputProduct({ listName, productName }: inputProductProps): ReactElemen
                 )}
             </div>
             <div>
-                <h2>Gruppo</h2>
-                <div>
-                    <select
-                        value={selectedGroup || ""}
-                        onChange={(e) => setSelectedGroup(e.target.value)}
-                    >
-                        <option value="">Seleziona gruppo</option>
-                        {groups.map((group) => (
-                            <option key={group} value={group}>
-                                {group}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                Aggiungi a gruppo:
+                <Select
+                    options={groups.map((group) => ({ value: group, label: group }))}
+                    value={selectedGroup ? { value: selectedGroup, label: selectedGroup } : null}
+                    onChange={handleGroupSelect}
+                    isClearable
+                    isSearchable
+                />
             </div>
             {productName && (
                 <button type="submit" onClick={() => handleModifyProduct()}>

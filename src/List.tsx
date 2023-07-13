@@ -6,8 +6,6 @@ import {
     closeConfirmation,
     removeList,
     selectList,
-    addGroup,
-    changeGroupOrder
 } from "./State";
 
 interface ListProps {
@@ -20,9 +18,9 @@ function List({ listName }: ListProps) {
         lists,
         selectedList,
         removeConfirmation,
-        creatingProduct,
-        groups
+        creatingProduct
     } = state;
+
 
     const handleSelectList = () => {
         dispatch(selectList(listName));
@@ -30,17 +28,6 @@ function List({ listName }: ListProps) {
 
     const handleRemoveList = () => {
         dispatch(askConfirmation());
-    };
-
-    const handleAddGroup = () => {
-        const groupName = prompt("Inserisci il nome del nuovo gruppo");
-        if (groupName) {
-            dispatch(addGroup(groupName));
-        }
-    };
-
-    const handleChangeGroupOrder = (newOrder: string[]) => {
-        dispatch(changeGroupOrder(newOrder));
     };
 
     return (
@@ -59,18 +46,6 @@ function List({ listName }: ListProps) {
             {listName === selectedList && (
                 <div>
                     <Products listName={listName} />
-                    <div>
-                        <h4>Gruppi:</h4>
-                        <ul>
-                            {groups.map((group) => (
-                                <li key={group}>{group}</li>
-                            ))}
-                        </ul>
-                        <button onClick={handleAddGroup}>Aggiungi gruppo</button>
-                        <button onClick={() => handleChangeGroupOrder([...groups].reverse())}>
-                            Inverti ordine gruppi
-                        </button>
-                    </div>
                 </div>
             )}
         </div>

@@ -1,19 +1,19 @@
 import React, { ReactElement, useContext, useEffect } from "react";
 import { StateContext } from "./App";
-import {closeAlertNameProduct } from "./State";
+import {closeAlertNameGroup } from "./State";
 
 interface AlertProps {}
 
-function Alert(_: AlertProps): ReactElement {
+function AlertGroup(_: AlertProps): ReactElement {
     const { state, dispatch } = useContext(StateContext);
-    const { alertNameProduct } = state;
+    const { alertNameGroup } = state;
 
     useEffect(() => {
         let timeoutId: NodeJS.Timeout | null = null;
 
-        if (alertNameProduct) {
+        if (alertNameGroup) {
             timeoutId = setTimeout(() => {
-                dispatch(closeAlertNameProduct());
+                dispatch(closeAlertNameGroup());
             }, 5000);
         }
 
@@ -22,13 +22,13 @@ function Alert(_: AlertProps): ReactElement {
                 clearTimeout(timeoutId);
             }
         };
-    }, [alertNameProduct, dispatch]);
+    }, [alertNameGroup, dispatch]);
 
     return (
         <div>
-            {alertNameProduct && <p>Inserire un nome valido per il prodotto</p>}
+            {alertNameGroup && <p>Gruppo già presente</p>}
         </div>
     );
 }
 
-export default Alert;
+export default AlertGroup;

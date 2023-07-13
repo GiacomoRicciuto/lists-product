@@ -16,19 +16,41 @@ export interface State {
     selectedProduct?: string,
     creatingList: boolean,
     creatingProduct: boolean,
+    creatingGroup: boolean,
     removeConfirmation: boolean,
     alertNameProduct: boolean,
-    alertRemoveProduct: boolean
+    alertRemoveProduct: boolean,
+    alertNameGroup: boolean
 }
 
 export const initialState: State = {
-    lists: [],
-    groups: [],
+    lists: [{
+        listName: "Spesa",
+        products: [{
+            productName: "Banana",
+            quantity: 2,
+            group: "Frutta"
+        }, {
+            productName: "Prosciutto",
+            group: "Gastronomia"
+        }]
+    }, {
+        listName: "Libreria",
+        products: [{
+            productName: "Il buio oltre la siepe",
+            group: "Libri"
+        }, {
+            productName: "Compasso",
+        }]
+    }],
+    groups: ["Frutta", "Gastronomia", "Libri"],
     creatingList: false,
     creatingProduct: false,
     removeConfirmation: false,
     alertNameProduct: false,
-    alertRemoveProduct: false
+    alertRemoveProduct: false,
+    creatingGroup: false,
+    alertNameGroup: false
 }
 
 export type Action =
@@ -41,8 +63,12 @@ export type Action =
     | {type: "closeConfirmation"}
     | {type: "showAlertNameProduct"}
     | {type: "closeAlertNameProduct"}
+    | {type: "showAlertNameGroup"}
+    | {type: "closeAlertNameGroup"}
     | {type: "showAlertRemoveProduct"}
     | {type: "closeAlertRemoveProduct"}
+    | {type: "inputGroup"}
+    | {type: "outputGroup"}
     | {type: "setQuantityUndefined", listName: string, productName: string}
     | {type: "createNewList", listName: string}
     | {type: "selectList", listName: string}
@@ -55,6 +81,7 @@ export type Action =
     | {type: "addGroup", groupName: string}
     | {type: "changeGroupOrder", orderedList: string[]}
     | {type: "selectGroup", productName: string, nameGroup: string}
+    | {type: "unSelectGroup", productName: string}
 
 export const inputNameList = (): Action => ({type: "inputNameList"})
 export const outputNameList = (): Action => ({type: "outputNameList"})
@@ -67,6 +94,10 @@ export const showAlertNameProduct = (): Action => ({type: "showAlertNameProduct"
 export const closeAlertNameProduct = (): Action => ({type: "closeAlertNameProduct"})
 export const showAlertRemoveProduct = (): Action => ({type: "showAlertRemoveProduct"})
 export const closeAlertRemoveProduct = (): Action => ({type: "closeAlertRemoveProduct"})
+export const showAlertNameGroup = (): Action => ({type: "showAlertNameGroup"})
+export const closeAlertNameGroup = (): Action => ({type: "closeAlertNameGroup"})
+export const inputGroup = (): Action => ({type: "inputGroup"})
+export const outputGroup = (): Action => ({type: "outputGroup"})
 export const createNewList = (listName: string): Action => ({type: "createNewList", listName})
 export const removeList = (listName: string): Action => ({type: "removeList", listName})
 export const selectList = (listName: string): Action => ({type: "selectList", listName})
@@ -79,6 +110,7 @@ export const addProduct = (productName: string): Action => ({type: "addProduct",
 export const addGroup = (groupName: string): Action => ({type: "addGroup", groupName})
 export const changeGroupOrder = (orderedList: string[]): Action => ({type: "changeGroupOrder", orderedList})
 export const selectGroup = (productName: string, nameGroup: string): Action => ({type: "selectGroup", productName, nameGroup})
+export const unSelectGroup = (productName: string): Action => ({type: "unSelectGroup", productName})
 
 export function reducer(state: State, action: Action): State {
     switch (action.type) {
@@ -131,6 +163,22 @@ export function reducer(state: State, action: Action): State {
         case "closeAlertRemoveProduct":
             return {...state,
                 alertRemoveProduct: false
+            }
+        case "showAlertNameGroup":
+            return {...state,
+                alertNameGroup: true
+            }
+        case "closeAlertNameGroup":
+            return {...state,
+                alertNameGroup: false
+            }
+        case "inputGroup":
+            return {...state,
+                creatingGroup: true
+            }
+        case "outputGroup":
+            return {...state,
+                creatingGroup: false
             }
         case "createNewList":
             if (action.listName.length !== 0) {
@@ -269,7 +317,8 @@ export function reducer(state: State, action: Action): State {
             };
         case "addGroup":
             return {...state,
-                groups: [...state.groups, action.groupName]
+                groups: [...state.groups, action.groupName],
+                creatingGroup: false
             }
         case "changeGroupOrder":
             return {...state,
@@ -285,6 +334,29 @@ export function reducer(state: State, action: Action): State {
                                 return {
                                     ...product,
                                     group: action.nameGroup,
+                                };
+                            }
+                            return product;
+                        });
+
+                        return {
+                            ...list,
+                            products: updatedProducts,
+                        };
+                    }
+                    return list;
+                }),
+            };
+        case "unSelectGroup":
+            return {
+                ...state,
+                lists: state.lists.map((list) => {
+                    if (list.listName === state.selectedList) {
+                        const updatedProducts = list.products.map((product) => {
+                            if (product.productName === action.productName) {
+                                return {
+                                    ...product,
+                                    group: undefined,
                                 };
                             }
                             return product;
