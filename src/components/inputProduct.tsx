@@ -8,9 +8,10 @@ import {
     removeProduct, selectGroup,
     setQuantityUndefined,
     showAlertNameProduct,
-    showAlertRemoveProduct, unSelectGroup,
-} from "./State";
-import { StateContext } from "./App";
+    showAlertRemoveProduct, 
+    unSelectGroup,
+} from "../State";
+import { StateContext } from "../App";
 import Alert from "./Alert";
 import Select from "react-select";
 

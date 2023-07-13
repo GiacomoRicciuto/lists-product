@@ -1,8 +1,8 @@
-import React, {createContext, useReducer} from 'react';
+import {createContext, useReducer} from 'react';
 import './App.css';
 import {State, Action, initialState, reducer} from "./State";
-import Lists from "./Lists";
-import Groups from "./groups";
+import NavigationBar from './components/NavigationBar';
+import MainContent from './components/MainContent';
 
 type AppContext = {
     state: State,
@@ -18,11 +18,11 @@ export const StateContext = createContext<AppContext>(
 
 function App() {
     const [state,dispatch] = useReducer(reducer, initialState)
+    
     return (
         <StateContext.Provider value={{state,dispatch}}>
-            <h1>Gestore liste</h1>
-            <Lists/>
-            <Groups/>
+            <NavigationBar />
+            <MainContent />
         </StateContext.Provider>
     );
 }

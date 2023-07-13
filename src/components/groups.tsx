@@ -1,6 +1,6 @@
 import React, {ReactElement, useContext, useState} from "react";
-import {StateContext} from "./App";
-import {addGroup, inputGroup, outputGroup, showAlertNameGroup, changeGroupOrder} from "./State";
+import {StateContext} from "../App";
+import {addGroup, inputGroup, outputGroup, showAlertNameGroup, changeGroupOrder} from "../State";
 import AlertGroup from "./AlertGroup";
 
 interface groupsProps {

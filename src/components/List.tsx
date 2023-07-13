@@ -1,12 +1,14 @@
 import React, { useContext } from "react";
-import { StateContext } from "./App";
+import { StateContext } from "../App";
 import Products from "./products";
 import {
     askConfirmation,
     closeConfirmation,
     removeList,
     selectList,
-} from "./State";
+    addGroup,
+    changeGroupOrder
+} from "../State";
 
 interface ListProps {
     listName: string;

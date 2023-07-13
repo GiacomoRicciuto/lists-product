@@ -9,6 +9,12 @@ export interface listsProps {
     products: productsProps[]
 }
 
+export interface menuItem {
+    name: string,
+    code: string,
+    link: string
+}
+
 export interface State {
     lists: listsProps[],
     groups: string[],
@@ -22,6 +28,9 @@ export interface State {
     alertRemoveProduct: boolean,
     alertNameGroup: boolean,
     purchaseMode: boolean
+    expandedMenu: boolean,
+    menu: menuItem[],
+    selectedMenuItem: menuItem
 }
 
 export const initialState: State = {
@@ -50,6 +59,12 @@ export const initialState: State = {
     removeConfirmation: false,
     alertNameProduct: false,
     alertRemoveProduct: false,
+    expandedMenu: false,
+    menu: [
+        { name: "Liste", code: "lists", link: "/lists" },
+        { name: "Gruppi", code: "groups", link: "/groups" }
+    ],
+    selectedMenuItem: { name: "Liste", code: "lists", link: "/lists" },
     creatingGroup: false,
     alertNameGroup: false,
     purchaseMode: false
@@ -85,6 +100,8 @@ export type Action =
     | {type: "addGroup", groupName: string}
     | {type: "changeGroupOrder", orderedList: string[]}
     | {type: "selectGroup", productName: string, nameGroup: string}
+    | {type: "expandMenu"}
+    | {type: "selectMenuItem", menuItem: menuItem}
     | {type: "unSelectGroup", productName: string}
 
 export const inputNameList = (): Action => ({type: "inputNameList"})
@@ -116,6 +133,8 @@ export const addProduct = (productName: string): Action => ({type: "addProduct",
 export const addGroup = (groupName: string): Action => ({type: "addGroup", groupName})
 export const changeGroupOrder = (orderedList: string[]): Action => ({type: "changeGroupOrder", orderedList})
 export const selectGroup = (productName: string, nameGroup: string): Action => ({type: "selectGroup", productName, nameGroup})
+export const expandMenu = (): Action => ({type: "expandMenu"})
+export const selectMenuItem = (menuItem: menuItem): Action => ({type: "selectMenuItem", menuItem})
 export const unSelectGroup = (productName: string): Action => ({type: "unSelectGroup", productName})
 
 export function reducer(state: State, action: Action): State {
@@ -361,6 +380,16 @@ export function reducer(state: State, action: Action): State {
                     return list;
                 }),
             };
+        case "expandMenu":
+            return {
+                ...state,
+                expandedMenu: !state.expandedMenu
+            }
+        case "selectMenuItem":
+            return {
+                ...state,
+                selectedMenuItem: action.menuItem
+            }
         case "unSelectGroup":
             return {
                 ...state,

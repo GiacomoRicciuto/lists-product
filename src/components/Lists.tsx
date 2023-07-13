@@ -1,8 +1,8 @@
 import React, {ReactElement, useContext, useState} from "react";
-import {StateContext} from "./App";
+import {StateContext} from "../App";
 import List from "./List";
-import {inputNameList, createNewList, outputNameList} from "./State";
-
+import {inputNameList, createNewList, outputNameList} from "../State";
+import { Col, Button } from 'react-bootstrap';
 
 interface ListsProps {
 
@@ -28,7 +28,7 @@ function Lists(_: ListsProps): ReactElement {
     }
 
     return (
-        <div>
+        <Col sm="8" className="below-nav pb-6">
             {lists.length !== 0 &&
                 <ul>
                     {lists.map(
@@ -48,8 +48,7 @@ function Lists(_: ListsProps): ReactElement {
             {(!creatingList &&
                 <button onClick={handleCreateList}>Crea una nuova lista</button>
             )}
-
-        </div>
+        </Col>
     )
 }
 

@@ -1,5 +1,5 @@
 import React, {ReactElement, useContext} from "react";
-import {StateContext} from "./App";
+import {StateContext} from "../App";
 import Product from "./product";
 
 interface purchaseModeProps {
