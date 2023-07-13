@@ -22,17 +22,37 @@ export interface State {
     selectedProduct?: string,
     creatingList: boolean,
     creatingProduct: boolean,
+    creatingGroup: boolean,
     removeConfirmation: boolean,
     alertNameProduct: boolean,
     alertRemoveProduct: boolean,
     expandedMenu: boolean,
     menu: menuItem[]
     selectedMenuItem: menuItem
+    alertNameGroup: boolean
 }
 
 export const initialState: State = {
-    lists: [],
-    groups: [],
+    lists: [{
+        listName: "Spesa",
+        products: [{
+            productName: "Banana",
+            quantity: 2,
+            group: "Frutta"
+        }, {
+            productName: "Prosciutto",
+            group: "Gastronomia"
+        }]
+    }, {
+        listName: "Libreria",
+        products: [{
+            productName: "Il buio oltre la siepe",
+            group: "Libri"
+        }, {
+            productName: "Compasso",
+        }]
+    }],
+    groups: ["Frutta", "Gastronomia", "Libri"],
     creatingList: false,
     creatingProduct: false,
     removeConfirmation: false,
@@ -43,7 +63,9 @@ export const initialState: State = {
         { name: "Liste", code: "lists", link: "/lists" },
         { name: "Gruppi", code: "groups", link: "/groups" }
     ],
-    selectedMenuItem: { name: "Liste", code: "lists", link: "/lists" }
+    selectedMenuItem: { name: "Liste", code: "lists", link: "/lists" },
+    creatingGroup: false,
+    alertNameGroup: false
 }
 
 export type Action =
@@ -56,8 +78,12 @@ export type Action =
     | {type: "closeConfirmation"}
     | {type: "showAlertNameProduct"}
     | {type: "closeAlertNameProduct"}
+    | {type: "showAlertNameGroup"}
+    | {type: "closeAlertNameGroup"}
     | {type: "showAlertRemoveProduct"}
     | {type: "closeAlertRemoveProduct"}
+    | {type: "inputGroup"}
+    | {type: "outputGroup"}
     | {type: "setQuantityUndefined", listName: string, productName: string}
     | {type: "createNewList", listName: string}
     | {type: "selectList", listName: string}
@@ -72,6 +98,7 @@ export type Action =
     | {type: "selectGroup", productName: string, nameGroup: string}
     | {type: "expandMenu"}
     | {type: "selectMenuItem", menuItem: menuItem}
+    | {type: "unSelectGroup", productName: string}
 
 export const inputNameList = (): Action => ({type: "inputNameList"})
 export const outputNameList = (): Action => ({type: "outputNameList"})
@@ -84,6 +111,10 @@ export const showAlertNameProduct = (): Action => ({type: "showAlertNameProduct"
 export const closeAlertNameProduct = (): Action => ({type: "closeAlertNameProduct"})
 export const showAlertRemoveProduct = (): Action => ({type: "showAlertRemoveProduct"})
 export const closeAlertRemoveProduct = (): Action => ({type: "closeAlertRemoveProduct"})
+export const showAlertNameGroup = (): Action => ({type: "showAlertNameGroup"})
+export const closeAlertNameGroup = (): Action => ({type: "closeAlertNameGroup"})
+export const inputGroup = (): Action => ({type: "inputGroup"})
+export const outputGroup = (): Action => ({type: "outputGroup"})
 export const createNewList = (listName: string): Action => ({type: "createNewList", listName})
 export const removeList = (listName: string): Action => ({type: "removeList", listName})
 export const selectList = (listName: string): Action => ({type: "selectList", listName})
@@ -98,6 +129,7 @@ export const changeGroupOrder = (orderedList: string[]): Action => ({type: "chan
 export const selectGroup = (productName: string, nameGroup: string): Action => ({type: "selectGroup", productName, nameGroup})
 export const expandMenu = (): Action => ({type: "expandMenu"})
 export const selectMenuItem = (menuItem: menuItem): Action => ({type: "selectMenuItem", menuItem})
+export const unSelectGroup = (productName: string): Action => ({type: "unSelectGroup", productName})
 
 export function reducer(state: State, action: Action): State {
     switch (action.type) {
@@ -150,6 +182,22 @@ export function reducer(state: State, action: Action): State {
         case "closeAlertRemoveProduct":
             return {...state,
                 alertRemoveProduct: false
+            }
+        case "showAlertNameGroup":
+            return {...state,
+                alertNameGroup: true
+            }
+        case "closeAlertNameGroup":
+            return {...state,
+                alertNameGroup: false
+            }
+        case "inputGroup":
+            return {...state,
+                creatingGroup: true
+            }
+        case "outputGroup":
+            return {...state,
+                creatingGroup: false
             }
         case "createNewList":
             if (action.listName.length !== 0) {
@@ -288,7 +336,8 @@ export function reducer(state: State, action: Action): State {
             };
         case "addGroup":
             return {...state,
-                groups: [...state.groups, action.groupName]
+                groups: [...state.groups, action.groupName],
+                creatingGroup: false
             }
         case "changeGroupOrder":
             return {...state,
@@ -327,5 +376,28 @@ export function reducer(state: State, action: Action): State {
                 ...state,
                 selectedMenuItem: action.menuItem
             }
+        case "unSelectGroup":
+            return {
+                ...state,
+                lists: state.lists.map((list) => {
+                    if (list.listName === state.selectedList) {
+                        const updatedProducts = list.products.map((product) => {
+                            if (product.productName === action.productName) {
+                                return {
+                                    ...product,
+                                    group: undefined,
+                                };
+                            }
+                            return product;
+                        });
+
+                        return {
+                            ...list,
+                            products: updatedProducts,
+                        };
+                    }
+                    return list;
+                }),
+            };
     }
 }

@@ -22,9 +22,9 @@ function Product({listName, productName}: ProductProps) {
     return (
         <div>
             <button onClick={() => handleClickProduct()}>{productName}</button>
-
             {selectedProductObj?.quantity !== undefined && <h4>{selectedProductObj?.quantity}</h4>
             }
+            {/*{selectedProductObj?.group !== undefined && <h4>{selectedProductObj?.group}</h4>}*/}
         </div>
     )
 }
