@@ -26,10 +26,11 @@ export interface State {
     removeConfirmation: boolean,
     alertNameProduct: boolean,
     alertRemoveProduct: boolean,
+    alertNameGroup: boolean,
+    purchaseMode: boolean
     expandedMenu: boolean,
-    menu: menuItem[]
+    menu: menuItem[],
     selectedMenuItem: menuItem
-    alertNameGroup: boolean
 }
 
 export const initialState: State = {
@@ -65,7 +66,8 @@ export const initialState: State = {
     ],
     selectedMenuItem: { name: "Liste", code: "lists", link: "/lists" },
     creatingGroup: false,
-    alertNameGroup: false
+    alertNameGroup: false,
+    purchaseMode: false
 }
 
 export type Action =
@@ -84,6 +86,8 @@ export type Action =
     | {type: "closeAlertRemoveProduct"}
     | {type: "inputGroup"}
     | {type: "outputGroup"}
+    | {type: "enterPurchaseMode"}
+    | {type: "exitPurchaseMode"}
     | {type: "setQuantityUndefined", listName: string, productName: string}
     | {type: "createNewList", listName: string}
     | {type: "selectList", listName: string}
@@ -115,6 +119,8 @@ export const showAlertNameGroup = (): Action => ({type: "showAlertNameGroup"})
 export const closeAlertNameGroup = (): Action => ({type: "closeAlertNameGroup"})
 export const inputGroup = (): Action => ({type: "inputGroup"})
 export const outputGroup = (): Action => ({type: "outputGroup"})
+export const enterPurchaseMode = (): Action => ({type: "enterPurchaseMode"})
+export const exitPurchaseMode = (): Action => ({type: "exitPurchaseMode"})
 export const createNewList = (listName: string): Action => ({type: "createNewList", listName})
 export const removeList = (listName: string): Action => ({type: "removeList", listName})
 export const selectList = (listName: string): Action => ({type: "selectList", listName})
@@ -198,6 +204,14 @@ export function reducer(state: State, action: Action): State {
         case "outputGroup":
             return {...state,
                 creatingGroup: false
+            }
+        case "enterPurchaseMode":
+            return {...state,
+                purchaseMode: true
+            }
+        case "exitPurchaseMode":
+            return {...state,
+                purchaseMode: false
             }
         case "createNewList":
             if (action.listName.length !== 0) {

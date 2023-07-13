@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {StateContext} from "../App";
 import {inputNameProduct, selectProduct} from "../State";
 
@@ -9,7 +9,8 @@ interface ProductProps {
 
 function Product({listName, productName}: ProductProps) {
     const { state, dispatch } = useContext(StateContext)
-    const {lists} = state
+    const {lists, purchaseMode} = state
+    const [isChecked, setIsChecked] = useState(false)
 
     const selectedList = lists.find((list) => list.listName === listName);
     const selectedProductObj = selectedList?.products.find((product) => product.productName === productName)
@@ -19,12 +20,37 @@ function Product({listName, productName}: ProductProps) {
         dispatch(inputNameProduct())
     }
 
+    const handleCheckboxChange = () => {
+        setIsChecked(!isChecked)
+    }
+
     return (
         <div>
-            <button onClick={() => handleClickProduct()}>{productName}</button>
-            {selectedProductObj?.quantity !== undefined && <h4>{selectedProductObj?.quantity}</h4>
+            {!purchaseMode && <button onClick={() => handleClickProduct()}>{productName}</button>}
+            {purchaseMode && (<div>
+                {!purchaseMode && (
+                    <button onClick={() => handleClickProduct()}>{productName}</button>
+                )}
+                {purchaseMode && (
+                    <div>
+                        <label>
+                            <input
+                                type="checkbox"
+                                onChange={() => handleCheckboxChange()}
+                            />
+                            <span style={{ textDecoration: isChecked ? 'line-through' : 'none' }}>
+                                {productName}
+          </span>
+                        </label>
+                    </div>
+                )}
+                {selectedProductObj?.quantity !== undefined && (
+                    <h4>{selectedProductObj?.quantity}</h4>
+                )}
+            </div>)}
+            {
+                selectedProductObj?.quantity !== undefined && <h4>{selectedProductObj?.quantity}</h4>
             }
-            {/*{selectedProductObj?.group !== undefined && <h4>{selectedProductObj?.group}</h4>}*/}
         </div>
     )
 }

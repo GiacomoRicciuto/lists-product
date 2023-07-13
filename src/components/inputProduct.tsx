@@ -78,7 +78,7 @@ function InputProduct({ listName, productName }: inputProductProps): ReactElemen
                 dispatch(unSelectGroup(newProductName))
             }
             setNewProductName("");
-            setSelectedGroup(undefined); // Reset selected group
+            setSelectedGroup(undefined);
         } else {
             dispatch(showAlertNameProduct());
         }
