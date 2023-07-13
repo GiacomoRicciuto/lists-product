@@ -15,7 +15,6 @@ interface ListProps {
 function List({ listName }: ListProps) {
     const { state, dispatch } = useContext(StateContext);
     const {
-        lists,
         selectedList,
         removeConfirmation,
         creatingProduct
