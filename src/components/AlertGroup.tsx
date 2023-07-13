@@ -1,6 +1,6 @@
 import React, { ReactElement, useContext, useEffect } from "react";
-import { StateContext } from "./App";
-import {closeAlertNameGroup } from "./State";
+import { StateContext } from "../App";
+import {closeAlertNameGroup } from "../State";
 
 interface AlertProps {}
 

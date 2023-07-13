@@ -1,5 +1,6 @@
 import {ReactElement} from "react";
 import Lists from "./Lists";
+import Groups from "./Groups";
 import Menu from "./Menu";
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Container, Row } from "react-bootstrap";
@@ -21,7 +22,14 @@ function MainContent(props: MainContentProps): ReactElement {
                         </Row>
                     </Container>
                 } />
-                {/* <Route path="/groups" element={<Groups />} /> */}
+                <Route path="/groups" element={
+                    <Container fluid>
+                        <Row>
+                            <Menu/>
+                            <Groups/>
+                        </Row>
+                    </Container>
+                } />
                 <Route path="/*" element={<Navigate to="/lists" />} />
             </Routes>
         </BrowserRouter>

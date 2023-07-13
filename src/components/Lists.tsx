@@ -3,6 +3,10 @@ import {StateContext} from "../App";
 import List from "./List";
 import {inputNameList, createNewList, outputNameList} from "../State";
 import { Col, Button } from 'react-bootstrap';
+import ListGroup from 'react-bootstrap/ListGroup';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
+import Accordion from 'react-bootstrap/Accordion';
 
 interface ListsProps {
 
@@ -29,24 +33,46 @@ function Lists(_: ListsProps): ReactElement {
 
     return (
         <Col sm="8" className="below-nav pb-6">
-            {lists.length !== 0 &&
-                <ul>
-                    {lists.map(
-                        (list) => <li key={list.listName}>
-                            <List listName={list.listName}></List>
-                        </li>
-                    )}
-                </ul>}
-            {lists.length === 0 && <h3>Nessuna lista presente</h3>}
-            {creatingList && (
-                <div>
-                    <input type="text" value={newListName} onChange={(e) => setNewListName(e.target.value)}/>
-                    <button type="submit" onClick={() => handleCreateNewList()}>Aggiungi lista</button>
-                    <button onClick={() => handleClose()}>Annulla</button>
-                </div>
-            )}
+            <Accordion>
+                {
+                    lists.length !== 0 &&
+                        lists.map(
+                            (list) => 
+                                <Accordion.Item eventKey={list.listName}>
+                                    <Accordion.Header>
+                                        {list.listName}
+                                    </Accordion.Header>
+                                    <Accordion.Body>
+                                        <List listName={list.listName}></List>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                        )
+                }
+                {
+                    creatingList && (
+                    <Accordion.Item eventKey="new">
+                        <Accordion.Header>
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <InputGroup className="mb-3">
+                                <InputGroup.Text>Nome Lista</InputGroup.Text>
+                                <Form.Control aria-label="name" type="text" value={newListName} onChange={(e) => setNewListName(e.target.value)}/>
+                            </InputGroup>
+                            <div className="d-flex justify-content-around">
+                                <Button variant="outline-secondary" onClick={() => handleClose()}>Annulla</Button>
+                                <Button variant="primary" type="submit" onClick={() => handleCreateNewList()}>Inserisci</Button>
+                            </div>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                )}
+            </Accordion>
+            {lists.length === 0 && !creatingList && <h4 className="text-center">Nessuna lista presente</h4>}
             {(!creatingList &&
-                <button onClick={handleCreateList}>Crea una nuova lista</button>
+                <Button
+                    className="fixed-right-bottom"
+                    onClick={handleCreateList}>
+                    &#43;
+                </Button>
             )}
         </Col>
     )

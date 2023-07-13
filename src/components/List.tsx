@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { StateContext } from "../App";
 import Products from "./products";
 import {
@@ -9,6 +9,8 @@ import {
     addGroup,
     changeGroupOrder
 } from "../State";
+import { Button } from "react-bootstrap";
+import * as Icons from 'react-bootstrap-icons';
 
 interface ListProps {
     listName: string;
@@ -17,16 +19,8 @@ interface ListProps {
 function List({ listName }: ListProps) {
     const { state, dispatch } = useContext(StateContext);
     const {
-        lists,
-        selectedList,
         removeConfirmation,
-        creatingProduct
     } = state;
-
-
-    const handleSelectList = () => {
-        dispatch(selectList(listName));
-    };
 
     const handleRemoveList = () => {
         dispatch(askConfirmation());
@@ -34,22 +28,17 @@ function List({ listName }: ListProps) {
 
     return (
         <div>
-            <button onClick={handleSelectList}>{listName}</button>
-            {listName === selectedList && !creatingProduct && (
-                <button onClick={() => handleRemoveList()}>x</button>
-            )}
-            {removeConfirmation && listName === selectedList && (
+            <div className="d-flex justify-content-end">
+                <Button variant="outline-danger" onClick={() => handleRemoveList()}><Icons.Trash /></Button>
+            </div>
+            {removeConfirmation && (
                 <div>
                     <p>Elimina lista?</p>
                     <button onClick={() => dispatch(removeList(listName))}>Elimina</button>
                     <button onClick={() => dispatch(closeConfirmation())}>Annulla</button>
                 </div>
             )}
-            {listName === selectedList && (
-                <div>
-                    <Products listName={listName} />
-                </div>
-            )}
+            <Products listName={listName} />
         </div>
     );
 }

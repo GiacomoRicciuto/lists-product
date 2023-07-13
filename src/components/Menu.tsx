@@ -1,8 +1,9 @@
-import { ReactElement, useContext, useState } from 'react';
+import { ReactElement, useContext } from 'react';
 import { Collapse, Col } from 'react-bootstrap';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { Link } from 'react-router-dom';
 import {StateContext} from "../App";
+import {selectMenuItem} from "../State";
 
 interface MenuProps {
 }
@@ -46,6 +47,7 @@ function MenuItemList(props: MenuItemsProps): ReactElement {
                             key={m.code}
                             action
                             eventKey={m.code} 
+                            onClick={() => dispatch(selectMenuItem(m))}
                             className="d-flex justify-content-around">
                             {m.name}
                         </ListGroup.Item>
