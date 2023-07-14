@@ -1,6 +1,6 @@
-import React, { ReactElement, useContext, useEffect } from "react";
+import { ReactElement, useContext, useEffect } from "react";
 import { StateContext } from "../App";
-import { showAlertNameProduct, closeAlertNameProduct } from "../State";
+import { closeAlertNameProduct } from "../State";
 
 interface AlertProps {}
 
@@ -25,7 +25,7 @@ function Alert(_: AlertProps): ReactElement {
     }, [alertNameProduct, dispatch]);
 
     return (
-        <div>
+        <div className="text-danger text-center">
             {alertNameProduct && <p>Inserire un nome valido per il prodotto</p>}
         </div>
     );

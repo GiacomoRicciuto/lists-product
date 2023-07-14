@@ -1,4 +1,4 @@
-import React, {ReactElement, useContext, useState} from "react";
+import {ReactElement, useContext, useState} from "react";
 import {StateContext} from "../App";
 import {addGroup, inputGroup, outputGroup, showAlertNameGroup, changeGroupOrder} from "../State";
 import AlertGroup from "./AlertGroup";

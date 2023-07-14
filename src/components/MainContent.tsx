@@ -4,7 +4,7 @@ import Groups from "./Groups";
 import Menu from "./Menu";
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Container, Row } from "react-bootstrap";
-
+import PurchaseMode from "./PurchaseMode";
 
 
 interface MainContentProps {
@@ -27,6 +27,13 @@ function MainContent(props: MainContentProps): ReactElement {
                         <Row>
                             <Menu/>
                             <Groups/>
+                        </Row>
+                    </Container>
+                } />
+                <Route path="/purchase" element={
+                    <Container fluid>
+                        <Row>
+                            <PurchaseMode/>
                         </Row>
                     </Container>
                 } />

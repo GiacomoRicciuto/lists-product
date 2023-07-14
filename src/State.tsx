@@ -286,7 +286,6 @@ export function reducer(state: State, action: Action): State {
                 return list;
             }),
                 creatingProduct: false,
-                selectedProduct: undefined
             }
         case "modifyProductName":
             return {
@@ -310,8 +309,7 @@ export function reducer(state: State, action: Action): State {
                 }
                 return list;
             }),
-                creatingProduct: false,
-                selectedProduct: undefined
+                creatingProduct: false
             }
         case "removeProduct":
             return {
@@ -321,6 +319,7 @@ export function reducer(state: State, action: Action): State {
                         const updatedProducts = list.products.filter(
                             (product) => product.productName !== action.productName
                         );
+
 
                         return {
                             ...list,
@@ -362,15 +361,14 @@ export function reducer(state: State, action: Action): State {
                 ...state,
                 lists: state.lists.map((list) => {
                     if (list.listName === state.selectedList) {
-                        const updatedProducts = list.products.map((product) => {
-                            if (product.productName === action.productName) {
-                                return {
-                                    ...product,
-                                    group: action.nameGroup,
-                                };
-                            }
-                            return product;
-                        });
+                        const productNames = list.products.map(p => p.productName)
+                        const index = productNames.indexOf(action.productName)
+                        let updatedProducts = list.products;
+                        const product = updatedProducts.splice(index, 1)[0]
+                        updatedProducts.push({
+                            ...product,
+                            group: action.nameGroup,
+                        })
 
                         return {
                             ...list,
@@ -395,15 +393,14 @@ export function reducer(state: State, action: Action): State {
                 ...state,
                 lists: state.lists.map((list) => {
                     if (list.listName === state.selectedList) {
-                        const updatedProducts = list.products.map((product) => {
-                            if (product.productName === action.productName) {
-                                return {
-                                    ...product,
-                                    group: undefined,
-                                };
-                            }
-                            return product;
-                        });
+                        const productNames = list.products.map(p => p.productName)
+                        const index = productNames.indexOf(action.productName)
+                        let updatedProducts = list.products;
+                        const product = updatedProducts.splice(index, 1)[0]
+                        updatedProducts.push({
+                            ...product,
+                            group: undefined,
+                        })
 
                         return {
                             ...list,

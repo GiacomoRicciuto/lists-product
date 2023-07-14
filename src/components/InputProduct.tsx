@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useState } from "react";
+import { ReactElement, useContext, useState } from "react";
 import {
     addProduct,
     closeAlertRemoveProduct,
@@ -14,6 +14,10 @@ import {
 import { StateContext } from "../App";
 import Alert from "./Alert";
 import Select from "react-select";
+import { Button, ButtonGroup } from "react-bootstrap";
+import * as Icons from 'react-bootstrap-icons';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
 
 interface inputProductProps {
     listName: string;
@@ -23,7 +27,7 @@ interface inputProductProps {
 function InputProduct({ listName, productName }: inputProductProps): ReactElement {
     const { state, dispatch } = useContext(StateContext);
     const [newProductName, setNewProductName] = useState(productName || "");
-    const { lists, selectedProduct, alertRemoveProduct, groups } = state;
+    const { lists, alertRemoveProduct, groups } = state;
     const selectedList = lists.find((list) => list.listName === listName);
     const selectedProductObj = selectedList?.products.find(
         (product) => product.productName === productName
@@ -77,8 +81,6 @@ function InputProduct({ listName, productName }: inputProductProps): ReactElemen
             else {
                 dispatch(unSelectGroup(newProductName))
             }
-            setNewProductName("");
-            setSelectedGroup(undefined);
         } else {
             dispatch(showAlertNameProduct());
         }
@@ -95,51 +97,52 @@ function InputProduct({ listName, productName }: inputProductProps): ReactElemen
     return (
         <div>
             <div>
-                {productName && productName === selectedProduct && (
-                    <button onClick={() => handleRemoveProduct()}>x</button>
-                )}
-                {alertRemoveProduct && productName === selectedProduct && (
+                <div className="d-flex justify-content-between">
                     <div>
-                        <p>Elimina {productName}?</p>
-                        <button
-                            onClick={() => {
-                                dispatch(removeProduct(newProductName));
-                                dispatch(closeAlertRemoveProduct());
-                            }}
-                        >
-                            Elimina
-                        </button>
-                        <button onClick={() => dispatch(closeAlertRemoveProduct())}>Annulla</button>
                     </div>
-                )}
-                <p>Nome prodotto</p>
-                <input
-                    type="text"
-                    value={newProductName}
-                    onChange={(e) => setNewProductName(e.target.value)}
-                />
-            </div>
-            <div>
-                Modifica quantità
-                <input type="checkbox" checked={isChecked} onChange={handleOnChange} />
-                {isChecked && (
                     <div>
-                        <button
-                            onClick={() => {
-                                if (counter > 0) {
-                                    setCounter(counter - 1);
-                                }
-                            }}
-                        >
-                            -
-                        </button>
-                        <h4>{counter}</h4>
-                        <button onClick={() => setCounter(counter + 1)}>+</button>
+                        {alertRemoveProduct && productName && (
+                            <div>
+                                <p>Vuoi eliminare definitivamente {productName}?</p>
+                                <div className="d-flex justify-content-between">
+                                    <Button variant="outline-secondary" onClick={() => dispatch(closeAlertRemoveProduct())}>Annulla</Button>
+                                    <Button variant="danger" onClick={() => {
+                                            dispatch(removeProduct(productName));
+                                            dispatch(closeAlertRemoveProduct());
+                                    }}>Elimina</Button>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                )}
+                    <div>
+                        { productName && <Button variant="danger" onClick={() => handleRemoveProduct()}><Icons.Trash /></Button> }
+                    </div>
+                </div>
             </div>
-            <div>
-                Aggiungi a gruppo:
+            <div className="mt-3">
+                <InputGroup className="mb-3">
+                    <InputGroup.Text>Nome prodotto</InputGroup.Text>
+                    <Form.Control aria-label="name" type="text" value={newProductName} onChange={(e) => setNewProductName(e.target.value)}/>
+                </InputGroup>
+                <div className="d-flex justify-content-between">
+                    <Form.Check
+                        type="checkbox"
+                        label={productName ? "Modifica quantità": "Aggiungi quantità"}
+                        onChange={handleOnChange}
+                        checked={isChecked}
+                    />
+                    {isChecked && (
+                        <ButtonGroup size="sm" aria-label="small outlined button group">
+                            <Button size="sm" variant="secondary" onClick={() => setCounter(counter - 1)} disabled={counter <= 0}><Icons.Dash /></Button>
+                            <Button size="sm" variant="outline-dark" disabled><small>{counter}</small></Button>
+                            <Button size="sm" variant="secondary" onClick={() => setCounter(counter + 1)}><Icons.Plus /></Button>
+                        </ButtonGroup>
+                    )}
+                </div>
+            </div>
+            <div className="mt-2">
+                {productName && 'Modifica gruppo:'}
+                {!productName && 'Aggiungi a gruppo:'}
                 <Select
                     options={groups.map((group) => ({ value: group, label: group }))}
                     value={selectedGroup ? { value: selectedGroup, label: selectedGroup } : null}
@@ -148,18 +151,11 @@ function InputProduct({ listName, productName }: inputProductProps): ReactElemen
                     isSearchable
                 />
             </div>
-            {productName && (
-                <button type="submit" onClick={() => handleModifyProduct()}>
-                    Salva modifiche
-                </button>
-            )}
-            {!productName && (
-                <button type="submit" onClick={() => handleAddProduct()}>
-                    Salva modifiche
-                </button>
-            )}
+            <div className="d-flex justify-content-around mt-3">
+                {!productName && <Button variant="outline-secondary" onClick={() => handleClose()}>Annulla</Button> }
+                <Button variant="outline-success" type="submit" onClick={() => productName? handleModifyProduct(): handleAddProduct()}>Salva</Button>
+            </div>
             <Alert />
-            <button onClick={() => handleClose()}>Annulla</button>
         </div>
     );
 }

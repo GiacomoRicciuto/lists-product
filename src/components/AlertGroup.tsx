@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useEffect } from "react";
+import { ReactElement, useContext, useEffect } from "react";
 import { StateContext } from "../App";
 import {closeAlertNameGroup } from "../State";
 

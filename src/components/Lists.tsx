@@ -1,9 +1,8 @@
-import React, {ReactElement, useContext, useState} from "react";
+import {ReactElement, useContext, useState} from "react";
 import {StateContext} from "../App";
 import List from "./List";
-import {inputNameList, createNewList, outputNameList} from "../State";
+import {inputNameList, createNewList, outputNameList, selectList} from "../State";
 import { Col, Button } from 'react-bootstrap';
-import ListGroup from 'react-bootstrap/ListGroup';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
@@ -31,16 +30,24 @@ function Lists(_: ListsProps): ReactElement {
         setNewListName("")
     }
 
+    const handleSelectList = (listName: string) => {
+        dispatch(selectList(listName))
+    }    
+
     return (
         <Col sm="8" className="below-nav pb-6">
-            <Accordion>
+            <Accordion onSelect={(e) => {
+                if (e && typeof e === 'string'){ 
+                    handleSelectList(e);
+                }
+            }}>
                 {
                     lists.length !== 0 &&
                         lists.map(
                             (list) => 
                                 <Accordion.Item eventKey={list.listName}>
                                     <Accordion.Header>
-                                        {list.listName}
+                                        <h6 className="text-muted">{list.listName}</h6>
                                     </Accordion.Header>
                                     <Accordion.Body>
                                         <List listName={list.listName}></List>
@@ -66,7 +73,7 @@ function Lists(_: ListsProps): ReactElement {
                     </Accordion.Item>
                 )}
             </Accordion>
-            {lists.length === 0 && !creatingList && <h4 className="text-center">Nessuna lista presente</h4>}
+            {lists.length === 0 && !creatingList && <h4 className="text-center">Non sono presenti liste</h4>}
             {(!creatingList &&
                 <Button
                     className="fixed-right-bottom"
